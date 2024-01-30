@@ -1,13 +1,16 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/SawitProRecruitment/UserService/generated"
 	"github.com/SawitProRecruitment/UserService/handler"
 	"github.com/SawitProRecruitment/UserService/repository"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -16,10 +19,16 @@ func main() {
 	var server generated.ServerInterface = newServer()
 
 	generated.RegisterHandlers(e, server)
+	e.Use(middleware.Logger())
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
 func newServer() *handler.Server {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	dbDsn := os.Getenv("DATABASE_URL")
 	var repo repository.RepositoryInterface = repository.NewRepository(repository.NewRepositoryOptions{
 		Dsn: dbDsn,

@@ -3,11 +3,18 @@
 # From which image we want to build. This is basically our environment.
 FROM golang:1.19-alpine as Build
 
+# RUN go mod download
+RUN go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.0.0
+
 # This will copy all the files in our repo to the inside the container at root location.
-COPY . .
+COPY . /app
+
+WORKDIR /app
+RUN mkdir -p generated
+RUN oapi-codegen --package generated -generate types,server,spec api.yml > generated/api.gen.go
 
 # Build our binary at root location.
-RUN GOPATH= go build -o /main cmd/main.go
+RUN go build -o /main cmd/main.go
 
 ####################################################################
 # This is the actual image that we will be using in production.
