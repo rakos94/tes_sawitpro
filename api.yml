@@ -40,8 +40,103 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /auth/registration:
+    post:
+      summary: Handle registration user.
+      operationId: registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/RegistrationResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorValidationResponse"
+  /auth/login:
+    post:
+      summary: Handle login user.
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /profile:
+    get:
+      summary: Handle get profile user.
+      operationId: profile
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/GetProfileResponse"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      summary: Handle update profile user.
+      operationId: updateProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/Success"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
+    Success:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
     HelloResponse:
       type: object
       required:
@@ -55,4 +150,85 @@ components:
         - message
       properties:
         message:
+          type: string
+    ErrorValidationResponse:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Validations"
+    Validations:
+      type: object
+      required:
+        - field
+        - error
+      properties:
+        field: 
+          type: string
+        error: 
+          type: string
+    RegistrationRequest:
+      type: object
+      required:
+        - phone
+        - name
+        - password
+      properties:
+        phone:
+          type: string
+          minLength: 10
+          maxLength: 13
+        name:
+          type: string
+          minLength: 3
+          maxLength: 60
+        password:
+          type: string
+          format: password
+          minLength: 6
+          maxLength: 64
+    RegistrationResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+    LoginRequest:
+      type: object
+      required:
+        - phone
+        - password
+      properties:
+        phone:
+          type: string
+        password:
+          type: string
+          format: password
+    LoginResponse:
+      type: object
+      required:
+        - num_login
+      properties:
+        num_login:
+          type: integer
+    GetProfileResponse:
+      type: object
+      required:
+        - phone
+        - name
+      properties:
+        phone:
+          type: string
+        name:
+          type: string
+    UpdateProfileRequest:
+      type: object
+      properties:
+        phone:
+          type: string
+        name:
           type: string
