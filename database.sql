@@ -8,10 +8,14 @@
   */
 
 /** This is test table. Remove this table and replace with your own tables. */
-CREATE TABLE test (
+CREATE TABLE users (
 	id serial PRIMARY KEY,
-	name VARCHAR ( 50 ) UNIQUE NOT NULL,
+	name VARCHAR ( 100 ) NOT NULL,
+	phone VARCHAR ( 20 ) NOT NULL,
+	password VARCHAR ( 100 ) NOT NULL,
+  num_login INT NOT NULL default 0,
+  created_at TIMESTAMPTZ NOT NULL default now(),
+	updated_at TIMESTAMPTZ NOT NULL default now()
 );
 
-INSERT INTO test (name) VALUES ('test1');
-INSERT INTO test (name) VALUES ('test2');
+INSERT INTO users (name, phone, password) VALUES ('test', '+6234567890', 'test');
