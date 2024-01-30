@@ -28,3 +28,5 @@ build
 
 # Generated
 generated
+.env
+__debug_bin
