@@ -13,9 +13,11 @@ CREATE TABLE users (
 	name VARCHAR ( 100 ) NOT NULL,
 	phone VARCHAR ( 20 ) NOT NULL,
 	password VARCHAR ( 100 ) NOT NULL,
+  token text NULL,
   num_login INT NOT NULL default 0,
   created_at TIMESTAMPTZ NOT NULL default now(),
-	updated_at TIMESTAMPTZ NOT NULL default now()
+	updated_at TIMESTAMPTZ NOT NULL default now(),
+  CONSTRAINT unique_phone UNIQUE (phone)
 );
 
-INSERT INTO users (name, phone, password) VALUES ('test', '+6234567890', 'test');
+INSERT INTO users (name, phone, password, token) VALUES ('test', '+6234567890', 'test');
