@@ -10,3 +10,28 @@ type RegistrationInput struct {
 type RegistrationOutput struct {
 	Id int
 }
+
+type LoginInput struct {
+	Phone string
+}
+
+type LoginOutput struct {
+	Id       int
+	Password string
+	Token    string
+}
+
+type ProfileInput struct {
+	Id int
+}
+
+type ProfileOutput struct {
+	Name  string
+	Phone string
+}
+
+type UpdateProfileInput struct {
+	Id    int
+	Name  string
+	Phone string
+}
