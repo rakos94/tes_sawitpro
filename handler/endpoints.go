@@ -115,7 +115,7 @@ func (s *Server) Registration(ctx echo.Context) error {
 func (s *Server) Profile(ctx echo.Context) error {
 	id, err := parseTokenFromSignedCtx(ctx)
 	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, generated.ErrorResponse{Message: "invalid token"})
+		return err
 	}
 
 	out, err := s.Repository.Profile(ctx.Request().Context(), repository.ProfileInput{
@@ -137,7 +137,7 @@ func (s *Server) Profile(ctx echo.Context) error {
 func (s *Server) UpdateProfile(ctx echo.Context) error {
 	id, err := parseTokenFromSignedCtx(ctx)
 	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, generated.ErrorResponse{Message: "invalid token"})
+		return err
 	}
 
 	var req generated.UpdateProfileRequest

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 	"unicode"
@@ -103,19 +104,19 @@ func parseTokenFromSignedCtx(ctx echo.Context) (int, error) {
 	reqToken := ctx.Request().Header.Get("Authorization")
 	splitToken := strings.Split(reqToken, "Bearer ")
 	if len(splitToken) != 2 {
-		return 0, fmt.Errorf("error parsing token")
+		return 0, ctx.JSON(http.StatusInternalServerError, generated.ErrorResponse{Message: "error parsing token"})
 	}
 
 	tokenString := splitToken[1]
 
 	publicKey, err := os.ReadFile("public.pem")
 	if err != nil {
-		return 0, fmt.Errorf("error reading public key file: %v\n", err)
+		return 0, ctx.JSON(http.StatusForbidden, generated.ErrorResponse{Message: "invalid token"})
 	}
 
 	key, err := jwt.ParseRSAPublicKeyFromPEM(publicKey)
 	if err != nil {
-		return 0, fmt.Errorf("error parsing RSA public key: %v\n", err)
+		return 0, ctx.JSON(http.StatusForbidden, generated.ErrorResponse{Message: "invalid token"})
 	}
 
 	parsedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -125,7 +126,7 @@ func parseTokenFromSignedCtx(ctx echo.Context) (int, error) {
 		return key, nil
 	})
 	if err != nil {
-		return 0, fmt.Errorf("error parsing token: %v", err)
+		return 0, ctx.JSON(http.StatusInternalServerError, generated.ErrorResponse{Message: err.Error()})
 	}
 
 	claim := parsedToken.Claims.(jwt.MapClaims)
