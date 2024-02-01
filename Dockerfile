@@ -24,6 +24,7 @@ FROM alpine:latest
 COPY --from=Build /main .
 COPY ./.env.example ./.env
 COPY ./rsakey.pem ./rsakey.pem
+COPY ./public.pem ./public.pem
 
 # This is the port that our application will be listening on.
 EXPOSE 1323
